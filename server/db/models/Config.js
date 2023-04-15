@@ -1,29 +1,28 @@
-const mongoose = require('mongoose');
-const Configs = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
-  },
-  isbn: {
-    type: String,
-    required: true
-  },
-  author: {
-    type: String,
-    required: true
-  },
-  description: {
-    type: String
-  },
-  published_date: {
-    type: Date
-  },
-  publisher: {
-    type: String
-  },
-  updated_date: {
-    type: Date,
-    default: Date.now
-  }
-});
-module.exports = Book = mongoose.model('book', BookSchema);
+module.exports = (sequelize, DataTypes) => {
+    const Configs = sequelize.define('Configs', {
+      id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+        unique: true,
+        allowNull: false,
+      },
+      groupname: {
+        type: DataTypes.STRING,
+      },
+      webhook: {
+        type: DataTypes.STRING,
+      },
+      generaldelay: {
+        type: DataTypes.INTEGER,
+      },
+      image: {
+        type: DataTypes.STRING,
+      },
+      userid: {
+        type: DataTypes.STRING,
+      },
+    });
+  
+    return Configs;
+  };
+  
