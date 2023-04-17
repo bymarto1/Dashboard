@@ -9,16 +9,16 @@ module.exports = (sequelize, DataTypes) => {
       groupName: {
         type: DataTypes.STRING,
       },
-      webhook: {
+      generalWebhook: {
         type: DataTypes.STRING,
       },
       generalDelay: {
         type: DataTypes.INTEGER,
       },
-      image: {
+      groupImage: {
         type: DataTypes.STRING,
       },
-      userid: {
+      user_id: {
         type: DataTypes.STRING,
       },
     });

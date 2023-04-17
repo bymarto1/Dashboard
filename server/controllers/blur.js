@@ -9,7 +9,7 @@ const {
 } = require('../services/blur');
 
 const getAllListingTasks = async (req, res, next) => {
-    logger.log('Received getAllOSListingTasks request', 1);
+    logger.log('Received getAllBLURListingTasks request', 1);
     try {
         const tasks = await getAllListingTasksService(req.userId);
         res.status(StatusCodes.OK).json(tasks);
@@ -20,7 +20,8 @@ const getAllListingTasks = async (req, res, next) => {
 };
 
 const createListingTask = async (req, res, next) => {
-    logger.log('Received createOSListingTask request', 1);
+    logger.log('Received createBlurListingTask request', 1);
+    console.log(req.body)
     try {
         const taskId = await createListingTaskService(req.userId, req.body);
         res.status(StatusCodes.CREATED).json(taskId);
@@ -31,7 +32,7 @@ const createListingTask = async (req, res, next) => {
 };
 
 const deleteListingTask = async (req, res, next) => {
-    logger.log('Received deleteListingTask request', 1);
+    logger.log('Received deleteBlurListingTask request', 1);
     try {
         await deleteListingTaskService(req.params.id);
         res.status(StatusCodes.NO_CONTENT).send();
