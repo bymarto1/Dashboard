@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Collections = sequelize.define('Collections', {
+  const BlurListing = sequelize.define('BlurListing', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -27,5 +27,5 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   } );
-return Collections;
+return BlurListing;
 };

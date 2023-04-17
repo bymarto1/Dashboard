@@ -23,7 +23,8 @@ const registerService = async (requestBody) => {
         hashedPassword: hash,
         role: 'USER',
     });
-    await db.configs.create({ id: crypto.randomUUID(), UserId: user.id });
+    var klk = await db.configs.create({ id: crypto.randomUUID(), userid: user.id });
+    console.log(klk)
     logger.log(
         'Successfully registered group, sending response with id and token...',
         1

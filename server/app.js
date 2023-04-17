@@ -18,7 +18,7 @@ const listEndpoints = require('express-list-endpoints');
 
 const authRouter = require('./routes/auth.js');
 const dashboardRouter = require('./routes/dashboard.js');
-//const openseaRouter = require('./routes/opensea');
+const blurRouter = require('./routes/blur');
 //const adminRouter = require('./routes/admin');
 
 const {
@@ -49,7 +49,7 @@ app.use(xss());
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/dashboard', authenticateUser, dashboardRouter);
-//app.use('/api/opensea', authenticateUser, openseaRouter);
+app.use('/api/blur', authenticateUser, blurRouter);
 //app.use('/api/admin', authenticateAdmin, adminRouter);
 
 app.use(notFoundMiddleware);
