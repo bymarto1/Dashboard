@@ -12,7 +12,7 @@ const {
 } = require('../errors');
 
 const getAllListingTasksService = async (userId) => {
-    const tasks = await db.openseaListingTasks.findAll({
+    const tasks = await db.BlurListingTasks.findAll({
         where: { user_id: userId },
         attributes: [
             'id',
@@ -33,7 +33,7 @@ const getAllListingTasksService = async (userId) => {
 const createListingTaskService = async (userId, requestBody) => {
     const { address, webhook, pricelimit } = requestBody;
 
-    const task = await db.openseaListingTasks.create({
+    const task = await db.BlurListingTasks.create({
         address,
         webhook,
         pricelimit,
@@ -44,7 +44,7 @@ const createListingTaskService = async (userId, requestBody) => {
 };
 
 const deleteListingTaskService = async (listingId) => {
-    await db.openseaListingTasks.destroy({
+    await db.BlurListingTasks.destroy({
         where: {
             id: listingId,
         },

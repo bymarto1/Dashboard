@@ -6,13 +6,13 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         allowNull: false,
       },
-      groupname: {
+      groupName: {
         type: DataTypes.STRING,
       },
       webhook: {
         type: DataTypes.STRING,
       },
-      generaldelay: {
+      generalDelay: {
         type: DataTypes.INTEGER,
       },
       image: {
