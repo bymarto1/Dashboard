@@ -13,16 +13,16 @@ const {
 } = require('../errors');
 
 const updateConfigService = async (userId, requestBody) => {
-    const { groupName, generalWebhook, generalDelay, image } = requestBody;
-    const config = await db.configs.findOne({ where: { userid: userId } });
-
-    await config.update({ groupName, generalWebhook, generalDelay , image });
+    const { groupName, generalWebhook, generalDelay, groupImage } = requestBody;
+    const config = await db.configs.findOne({ where: { user_id: userId } });
+    klk = await config.update({ groupName, generalWebhook, generalDelay , groupImage });
     logger.log('Successfully updated general config', 1);
     return;
 };
 
 const getCurrentConfigService = async (userId) => {
-    const config = await db.configs.findOne({ where: { userid: userId } });
+    console.log('klk')
+    const config = await db.configs.findOne({ where: { user_id: userId } });
     logger.log('Got current general config, returning it...', 1);
     return config;
 };

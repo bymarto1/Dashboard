@@ -12,31 +12,38 @@ const {
 } = require('../errors');
 
 const getAllListingTasksService = async (userId) => {
-    const tasks = await db.BlurListingTasks.findAll({
+
+    
+    const tasks = await db.blurListingTasks.findAll({
         where: { user_id: userId },
         attributes: [
             'id',
-            'address',
+            'collection',
             'webhook',
             'pricelimit',
+            'rarity',
+            'raritylimit'
         ],
         order: [['createdAt', 'DESC']],
         include: [{
-            model: db.Users,
+            model: db.users,
             attributes: ['username']
         }]
     });
+    
     logger.log('Got BlurListings tasks, returning it...', 1);
     return tasks;
 };
 
 const createListingTaskService = async (userId, requestBody) => {
-    const { address, webhook, pricelimit } = requestBody;
-
-    const task = await db.BlurListingTasks.create({
-        address,
+    const { collection,rarity , webhook, pricelimit , raritylimit } = requestBody;
+    console.log(raritylimit)
+    const task = await db.blurListingTasks.create({
+        collection,
         webhook,
+        rarity, 
         pricelimit,
+        raritylimit,
         user_id: userId,
     });
     logger.log('Successfully created BlurListings task', 1);
@@ -44,7 +51,7 @@ const createListingTaskService = async (userId, requestBody) => {
 };
 
 const deleteListingTaskService = async (listingId) => {
-    await db.BlurListingTasks.destroy({
+    await db.blurListingTasks.destroy({
         where: {
             id: listingId,
         },
