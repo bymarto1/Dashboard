@@ -6,17 +6,16 @@ import { DashboardLayout } from './components/layout/dashboard-layout';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider, RequireAuth } from './hooks/useAuth';
 import { Role } from './roles';
-
+ 
 import LogIn from './pages/LogIn';
 import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
 import Settings from './pages/Settings';
 import Blur from './pages/Blur';
 import BlurListing from './pages/Blur/BlurListing';
-
-
+import Payments from './pages/Payments'; 
 export default function App() {
-    return (
+    return ( 
         <AuthProvider>
             <ThemeProvider theme={theme}>
                 <Routes>
@@ -44,6 +43,14 @@ export default function App() {
                             }
                         />
                         <Route
+                            path='payments'
+                            element={
+                                <RequireAuth roles={[Role.ADMIN, Role.USER]}>
+                                    <Payments />
+                                </RequireAuth>
+                            }
+                        />
+                        <Route
                             path='blur'
                             element={
                                 <RequireAuth roles={[Role.ADMIN, Role.USER]}>
@@ -67,5 +74,6 @@ export default function App() {
                 </Routes>
             </ThemeProvider>
         </AuthProvider>
-    );
-}
+    ); 
+} 
+    

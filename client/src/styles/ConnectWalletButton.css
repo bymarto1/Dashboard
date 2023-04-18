@@ -1,0 +1,33 @@
+.connect-wallet-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0b90b;
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    height: 60px;
+    padding: 0 30px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .connect-wallet-button:hover {
+    background-color: #e0a10a;
+  }
+  
+  .icon {
+    background-image: url('../images/metamask.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  } 
+  
+  .text {
+    margin-left: 10px;
+  }
+  

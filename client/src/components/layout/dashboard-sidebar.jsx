@@ -6,11 +6,13 @@ import { Logo } from './logo';
 import { useLocation, Link } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { Blur } from '../../icons/blur';
 import { Blank } from '../../icons/blank';
+import React from 'react';
 
 const general = [
-    {
+    {  
         href: '/',
         icon: <BarChartIcon />,
         title: 'Dashboard',
@@ -19,6 +21,11 @@ const general = [
         href: '/settings',
         icon: <SettingsIcon />,
         title: 'Settings',
+    },
+    {
+        href: '/payments',
+        icon: <AccountBalanceWalletIcon />,
+        title: 'Payments',
     },
 ];
 
