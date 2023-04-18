@@ -30,6 +30,28 @@ const getCurrentConfig = async (token) => {
     return data;
 };
 
-const dashboardService = { updateConfig, getCurrentConfig };
+const getDashboardInfo = async(token)=> {
+    const { data } = await axios({
+        url: '/',
+        method: 'get',
+        baseURL: baseUrl,
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+}
+const payRenewal = async (transactionHash, price,token) => {
+    const response = await axios({
+        url: '/payment',
+        method: 'post',
+        baseURL: baseUrl,
+        data: {
+            transactionHash: transactionHash,
+            price : price
+        },
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.status;
+};
+const dashboardService = { updateConfig, getCurrentConfig , getDashboardInfo, payRenewal};
 
 export default dashboardService;
