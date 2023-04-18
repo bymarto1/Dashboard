@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
 import { Outlet } from 'react-router-dom';
+import React from 'react';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
     display: 'flex',

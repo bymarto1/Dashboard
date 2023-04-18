@@ -26,6 +26,7 @@ db.users = require('./models/User')(sequelize, Sequelize);
 
 db.configs = require('./models/Config')(sequelize, Sequelize);
 db.blurListingTasks = require('./models/BlurListing')(sequelize, Sequelize);
+db.payments = require('./models/Payment')(sequelize, Sequelize);
 
 // Relations
 db.users.hasOne(db.configs, { foreignKey: 'user_id' });
@@ -33,6 +34,9 @@ db.configs.belongsTo(db.users, { foreignKey: 'user_id' });
 
 db.users.hasMany(db.blurListingTasks, { foreignKey: 'user_id' });
 db.blurListingTasks.belongsTo(db.users, { foreignKey: 'user_id' });
+
+db.users.hasMany(db.payments);
+db.payments.belongsTo(db.users);
 
 
 // Sync with the db
