@@ -3,14 +3,18 @@ module.exports = (sequelize, DataTypes) => {
     'Payments',
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         primaryKey: true,
-        autoIncrement: true,
+        unique: true,
       },
       transactionHash: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+      },
+      price: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -31,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Payments.associate = function(models) {
     Payments.belongsTo(models.Users, {
-      foreignKey: 'user_id',
+      foreignKey: 'UserId', 
       onDelete: 'CASCADE',
     });
   };

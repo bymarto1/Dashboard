@@ -43,7 +43,7 @@ export default function App() {
                             }
                         />
                         <Route
-                            path='payments'
+                            path='payment'
                             element={
                                 <RequireAuth roles={[Role.ADMIN, Role.USER]}>
                                     <Payments />

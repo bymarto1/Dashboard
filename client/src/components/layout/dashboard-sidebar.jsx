@@ -23,7 +23,7 @@ const general = [
         title: 'Settings',
     },
     {
-        href: '/payments',
+        href: '/payment',
         icon: <AccountBalanceWalletIcon />,
         title: 'Payments',
     },

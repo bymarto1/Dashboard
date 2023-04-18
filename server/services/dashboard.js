@@ -27,9 +27,50 @@ const getCurrentConfigService = async (userId) => {
     return config;
 };
 
+const getDashboardInfoService = async (userId) => {
+    const user = await db.users.findOne({
+        where: { id: userId },
+        include: { model: db.renewals },
+    });
+    const info = {
+        username: user.username,
+        memberSince: user.createdAt,
+        expiryDate: user.Renewal.expiryDate,
+    };
+    return info;
+};
+
+const payRenewalService = async (userId, transactionHash, price) => {
+    console.log(userId,transactionHash, price)
+    
+    const [renewal, created] = await db.renewals.findOrCreate({
+        where: { UserId: userId },
+        defaults: {
+            id: crypto.randomUUID(),
+            expiryDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1),
+        },
+        UserId: userId
+
+    });
+
+    if (created) {
+        await renewal.update({ expiryDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1)});
+        logger.log('Successfully updated user renewal date', 1);
+    }
+
+    const payment = await db.payments.create({
+        id: crypto.randomUUID(),
+        transactionHash : transactionHash,
+        price : price,
+        UserId: userId,
+    });
+    return;
+};
 
 
 module.exports = {
     updateConfigService,
-    getCurrentConfigService,
+    getCurrentConfigService,    
+    getDashboardInfoService,
+    payRenewalService,
 };
