@@ -11,9 +11,12 @@ const {
     NotFoundError,
 } = require('../errors');
 
-const getAllListingTasksService = async (userId) => {
+const {getOwnerId} = require('./auth')
 
+const getAllListingTasksService = async (userId) => {
+    console.log(userId)
     
+    userId = await getOwnerId(userId)
     const tasks = await db.blurListingTasks.findAll({
         where: { user_id: userId },
         attributes: [
@@ -36,6 +39,8 @@ const getAllListingTasksService = async (userId) => {
 };
 
 const createListingTaskService = async (userId, requestBody) => {
+    userId = await getOwnerId(userId)
+
     const { collection,rarity , webhook, pricelimit , raritylimit } = requestBody;
     console.log(raritylimit)
     const task = await db.blurListingTasks.create({

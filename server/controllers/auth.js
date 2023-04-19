@@ -1,6 +1,6 @@
 const logger = require('../utils/logger');
 const { inspect } = require('util');
-const { registerService, loginService } = require('../services/auth');
+const { registerService, loginService, registerStaffService } = require('../services/auth');
 const { StatusCodes } = require('http-status-codes');
 
 const register = async (req, res, next) => {
@@ -28,7 +28,21 @@ const login = async (req, res, next) => {
     }
 };
 
+const registerStaff = async (req, res, next) => {
+    logger.log('Received registerStaf request', 1);
+    try {
+        const register = await registerStaffService(req.body);
+        res.status(StatusCodes.CREATED).json({
+            id: register,
+        });
+    } catch (error) {
+        logger.log(error.message, 0);
+        next(error);
+    }
+};
+
 module.exports = {
     register,
     login,
+    registerStaff
 };

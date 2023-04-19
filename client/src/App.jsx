@@ -29,7 +29,7 @@ export default function App() {
                         <Route
                             path='/'
                             element={
-                                <RequireAuth roles={[Role.ADMIN, Role.USER]}>
+                                <RequireAuth roles={[Role.ADMIN, Role.USER, Role.STAFF]}>
                                     <Dashboard />
                                 </RequireAuth>
                             }
@@ -53,7 +53,7 @@ export default function App() {
                         <Route
                             path='blur'
                             element={
-                                <RequireAuth roles={[Role.ADMIN, Role.USER]}>
+                                <RequireAuth roles={[Role.ADMIN, Role.USER, Role.STAFF]}>
                                     <Blur />
                                 </RequireAuth>
                             }
@@ -61,7 +61,7 @@ export default function App() {
                         <Route
                             path='blur/listing'
                             element={
-                                <RequireAuth roles={[Role.ADMIN, Role.USER]}>
+                                <RequireAuth roles={[Role.ADMIN, Role.USER, Role.STAFF]}>
                                     <BlurListing />
                                 </RequireAuth>
                             }
