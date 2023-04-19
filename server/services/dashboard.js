@@ -29,32 +29,33 @@ const getCurrentConfigService = async (userId) => {
 
 const getDashboardInfoService = async (userId) => {
     const user = await db.users.findOne({
-        where: { id: userId },
-        include: { model: db.renewals },
+      where: { id: userId },
+      include: { model: db.renewals },
+    });
+    const taskCount = await db.blurListingTasks.count({
+      where: { user_id: userId },
     });
     const info = {
-        username: user.username,
-        memberSince: user.createdAt,
-        expiryDate: user.Renewal.expiryDate,
+      username: user.username,
+      memberSince: user.createdAt,
+      expiryDate: user.Renewal.expiryDate,
+      blurTaskCount: taskCount,
     };
     return info;
-};
-
+  };
 const payRenewalService = async (userId, transactionHash, price) => {
-    console.log(userId,transactionHash, price)
-    
     const [renewal, created] = await db.renewals.findOrCreate({
         where: { UserId: userId },
         defaults: {
             id: crypto.randomUUID(),
-            expiryDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1),
+            expiryDate: new Date().setMonth(new Date().getMonth() + 1),
         },
         UserId: userId
 
     });
-
-    if (created) {
-        await renewal.update({ expiryDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1)});
+    console.log(renewal, created)
+    if (!created) {
+        await renewal.update({ expiryDate: new Date().setMonth(new Date().getMonth() + 1)});
         logger.log('Successfully updated user renewal date', 1);
     }
 
