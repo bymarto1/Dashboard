@@ -1,6 +1,8 @@
 import { ethers } from 'ethers';
 import { useState, useEffect, Alert,} from 'react';
 import '../styles/ConnectWalletButton.css';
+import { Box, Container, Typography, LinearProgress,} from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import dashboardService from '../services/dashboard';
 import { useAuth } from '../hooks/useAuth';
@@ -19,14 +21,49 @@ const style = {
 };
 
 export const ConnectAndPay = () => { 
+  const [username, setUsername] = useState('');
+  const [memberSince, setMemberSince] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [alert, setAlert] = useState(false);
-  const [isTransactionSent, setIsTransactionSent] = useState(false);
-  const [isTransactionCompleted, setIsTransactionCompleted] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [transactionStatus, setTransactionStatus] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState('');
+  const [isButtonHidden, setIsButtonHidden] = useState(false);
+
   var price = '0.05'
   const auth = useAuth();
+
+  useEffect(() => {
+      dashboardService
+          .getDashboardInfo(auth.token)
+          .then((info) => {
+              if (info ) {
+                  const { username, memberSince, expiryDate } = info;
+                  setUsername(username ? username : '');
+                  setMemberSince(memberSince ? memberSince : '');
+                  setExpiryDate(expiryDate ? expiryDate : '');
+              }
+          });
+      setLoading(false);
+  }, [auth.token]);
+
+  // Calculate the difference between the expiry date and the current date
+  const diffInMs = expiryDate ? new Date(expiryDate) - new Date() : 0;
+  const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+
+  // Determine the status of the subscription
+  let subscriptionStatus = '';
+  if (!expiryDate) {
+    subscriptionStatus = 'Unknown';
+  } else if (diffInMs <= 0) {
+    subscriptionStatus = 'Expired';
+  } else {
+    subscriptionStatus = 'Active';
+  }
+
   async function connectWallet() {
     if (window.ethereum) {
       try {
@@ -68,47 +105,114 @@ export const ConnectAndPay = () => {
         value: ethers.utils.parseEther(price),
       });
       console.log(transaction)
-      const transactionStatus = document.getElementById('transaction-status');
-      transactionStatus.innerHTML = 'Transaction sent';
-      transactionStatus.style.display = 'block';
+      setTransactionStatus('Sent')
+      setIsButtonHidden(true)
+      setLoading(true)
       await transaction.wait();
-      transactionStatus.innerHTML = 'Transaction complete';
-      const paymentStatus = document.getElementById('payment-status');
-      paymentStatus.innerHTML = 'Payment processing...';
-      paymentStatus.style.display = 'block';
+      setTransactionStatus('Completed')
+      setPaymentStatus('Sent')
       await handlePayment(transaction.hash, price);
-      paymentStatus.innerHTML = 'Payment successful';
+      setPaymentStatus('Completed')
+      window.location.reload();
     } catch (error) {
       if (error.code === ethers.utils.Logger.errors.INSUFFICIENT_FUNDS) {
         const transactionStatus = document.getElementById('transaction-status');
         transactionStatus.innerHTML = 'Insufficient balance. Please add funds to your account.';
         transactionStatus.style.display = 'block';
+        setLoading(false)
       } else {
         console.error(error);
+        setLoading(false)
+
       }
     }
   }
   
   async function handlePayment(transactionHash , price){
-    const response = await dashboardService.payRenewal(transactionHash, price,auth.token);
-    if (response === 200) {
-        document.getElementById('payment-status').innerHTML = 'Payment successful';
+    try {
+      const response = await dashboardService.payRenewal(transactionHash, price, auth.token);
+      if (response === 200) {
+        document.getElementById('payment-status').innerHTML = 'Payment Completed';
         setAlert(true);
         setTimeout(() => {
-            setAlert(false);
+          setAlert(false);
         }, 1500);
-    } else {
+      } else {
         document.getElementById('payment-status').innerHTML = 'Payment failed';
+      }
+    } catch (error) {
+      if (error.message === 'insufficient funds') {
+        setPaymentStatus('Error: Insufficient funds');
+        alert('Insufficient funds');
+      } else {
+        setPaymentStatus('Error: ' + error.message);
+      }
+      setLoading(false);
+    }
+  
+    if (parseFloat(await dashboardService.getBalance(auth.token)) < price) {
+      setPaymentStatus('Error: Insufficient balance');
     }
   };
 
 
   return (
-    <button className="connect-wallet-button" onClick={isConnected ? pay : connectWallet}>
-      <div className="icon"></div>
-      <div className="text">{isConnected ? 'Pay' : 'Connect Wallet'}</div>
-    </button>
+    <Box
+      component='main'
+      sx={{
+        flexGrow: 1,
+        py: 8,
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+      }}
+    >
+      <Box sx={{ mr: 8, flexGrow: 1 }}>
+        <Box sx={{ mb: 4 }}>
+          <Typography variant='h5'>Expiry Date:</Typography>
+          <Typography variant='h6' sx={{ fontSize: '18px' }}>{expiryDate ? new Date(expiryDate).toLocaleDateString() : 'Unknown'}</Typography>
+        </Box>
+        <Box sx={{ mb: 4 }}>
+          <Typography variant='h5'>Subscription Status:</Typography>
+          <Typography variant='h6' sx={{ fontSize: '18px' }}>
+            {subscriptionStatus} {subscriptionStatus === 'Active' && diffInDays > 0 ? `(${diffInDays} days left)` : ''}
+          </Typography>
+        </Box>
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <Box sx={{ mb: 4 }}>
+          {!isButtonHidden ? (
+            <button className="connect-wallet-button" onClick={() => {
+                if (isConnected) {
+                  pay();
+                } else {
+                  connectWallet();
+                }
+              }}>
+              <div className="icon"></div>
+              <div className="text">{isConnected ? 'Pay' : 'Connect Wallet'}</div>
+            </button>
+          ) : null}
+          {transactionStatus === 'Sent' && (
+            <Box sx={{ position: 'relative', height: 36 }}>
+              <CircularProgress />
+            </Box>
+          )}
+        </Box>
+        {transactionStatus && (transactionStatus === 'Sent' || transactionStatus === 'Completed') && (
+          <Typography sx={{ mb: 3, fontSize: 18 }} id="transaction-status">
+              Transaction {transactionStatus}
+          </Typography>
+        )}
+
+        {paymentStatus && (paymentStatus === 'Sent' || paymentStatus === 'Completed' || paymentStatus.startsWith('Error')) && (
+          <Typography sx={{ mb: 3, fontSize: 18, color: paymentStatus.startsWith('Error') ? 'red' : 'inherit' }} id="payment-status">
+            Payment {paymentStatus}
+          </Typography>
+        )}
+      </Box>
+    </Box>
   );
 }
-
+    
 export default ConnectAndPay;
