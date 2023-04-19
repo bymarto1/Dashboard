@@ -27,7 +27,10 @@ const authenticateUser = async (req, res, next) => {
         }
         const { id: userId } = decodedToken;
 
-        const user = await db.users.findOne({ where: { id: userId } });
+        var user = await db.users.findOne({ where: { id: userId } });
+        if (!user){
+            user = await db.staffs.findOne({ where: { id: userId } });
+        } 
         if (!user) throw new NotFoundError('User does not exist');
 
         req.userId = userId;

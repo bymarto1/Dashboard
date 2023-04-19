@@ -12,6 +12,7 @@ const {
     InternalServerError,
 } = require('../errors');
 
+
 const updateConfigService = async (userId, requestBody) => {
     const { groupName, generalWebhook, generalDelay, groupImage } = requestBody;
     const config = await db.configs.findOne({ where: { user_id: userId } });
@@ -28,10 +29,17 @@ const getCurrentConfigService = async (userId) => {
 };
 
 const getDashboardInfoService = async (userId) => {
-    const user = await db.users.findOne({
+    var user = await db.users.findOne({
       where: { id: userId },
       include: { model: db.renewals },
     });
+    if (!user){
+         user = await db.staffs.findOne({
+            where: { id: userId },
+            include: { model: db.renewals },
+          });  
+        
+    }
     const taskCount = await db.blurListingTasks.count({
       where: { user_id: userId },
     });
@@ -43,7 +51,7 @@ const getDashboardInfoService = async (userId) => {
     };
     return info;
   };
-const payRenewalService = async (userId, transactionHash, price) => {
+  const payRenewalService = async (userId, transactionHash, price) => {
     const [renewal, created] = await db.renewals.findOrCreate({
         where: { UserId: userId },
         defaults: {
@@ -51,11 +59,21 @@ const payRenewalService = async (userId, transactionHash, price) => {
             expiryDate: new Date().setMonth(new Date().getMonth() + 1),
         },
         UserId: userId
-
     });
+
     console.log(renewal, created)
+
     if (!created) {
-        await renewal.update({ expiryDate: new Date().setMonth(new Date().getMonth() + 1)});
+        const now = new Date();
+        const expiry = new Date(renewal.expiryDate);
+        const diffInDays = Math.floor((now - expiry) / (1000 * 60 * 60 * 24));
+        let daysToAdd = diffInDays;
+        if (daysToAdd > 10) {
+            daysToAdd = 10;
+        }
+        const newExpiry = new Date(now.getTime() - daysToAdd * (1000 * 60 * 60 * 24));
+        newExpiry.setMonth(newExpiry.getMonth() + 1);
+        await renewal.update({ expiryDate: newExpiry });
         logger.log('Successfully updated user renewal date', 1);
     }
 

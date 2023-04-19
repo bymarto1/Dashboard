@@ -114,6 +114,7 @@ export const ConnectAndPay = () => {
       await handlePayment(transaction.hash, price);
       setPaymentStatus('Completed')
       window.location.reload();
+
     } catch (error) {
       if (error.code === ethers.utils.Logger.errors.INSUFFICIENT_FUNDS) {
         const transactionStatus = document.getElementById('transaction-status');
@@ -158,60 +159,60 @@ export const ConnectAndPay = () => {
 
   return (
     <Box
-      component='main'
-      sx={{
-        flexGrow: 1,
-        py: 8,
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-      }}
-    >
-      <Box sx={{ mr: 8, flexGrow: 1 }}>
-        <Box sx={{ mb: 4 }}>
-          <Typography variant='h5'>Expiry Date:</Typography>
-          <Typography variant='h6' sx={{ fontSize: '18px' }}>{expiryDate ? new Date(expiryDate).toLocaleDateString() : 'Unknown'}</Typography>
-        </Box>
-        <Box sx={{ mb: 4 }}>
-          <Typography variant='h5'>Subscription Status:</Typography>
-          <Typography variant='h6' sx={{ fontSize: '18px' }}>
-            {subscriptionStatus} {subscriptionStatus === 'Active' && diffInDays > 0 ? `(${diffInDays} days left)` : ''}
-          </Typography>
-        </Box>
+    component='main'
+    sx={{
+      flexGrow: 1,
+      py: 8,
+      display: 'flex',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+    }}
+  >
+    <Box sx={{ mr: 8, flexGrow: 1 }}>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant='h5'>Expiry Date:</Typography>
+        <Typography variant='h6' sx={{ fontSize: '18px' }}>{expiryDate ? new Date(expiryDate).toLocaleDateString() : 'Unknown'}</Typography>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-        <Box sx={{ mb: 4 }}>
-          {!isButtonHidden ? (
-            <button className="connect-wallet-button" onClick={() => {
-                if (isConnected) {
-                  pay();
-                } else {
-                  connectWallet();
-                }
-              }}>
-              <div className="icon"></div>
-              <div className="text">{isConnected ? 'Pay' : 'Connect Wallet'}</div>
-            </button>
-          ) : null}
-          {transactionStatus === 'Sent' && (
-            <Box sx={{ position: 'relative', height: 36 }}>
-              <CircularProgress />
-            </Box>
-          )}
-        </Box>
-        {transactionStatus && (transactionStatus === 'Sent' || transactionStatus === 'Completed') && (
-          <Typography sx={{ mb: 3, fontSize: 18 }} id="transaction-status">
-              Transaction {transactionStatus}
-          </Typography>
-        )}
-
-        {paymentStatus && (paymentStatus === 'Sent' || paymentStatus === 'Completed' || paymentStatus.startsWith('Error')) && (
-          <Typography sx={{ mb: 3, fontSize: 18, color: paymentStatus.startsWith('Error') ? 'red' : 'inherit' }} id="payment-status">
-            Payment {paymentStatus}
-          </Typography>
-        )}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant='h5'>Subscription Status:</Typography>
+        <Typography variant='h6' sx={{ fontSize: '18px', color: subscriptionStatus === 'Expired' ? 'red' : 'inherit' }}>
+          {subscriptionStatus} {subscriptionStatus === 'Active' && diffInDays > 0 ? `(${diffInDays} days left)` : ''}
+        </Typography>
       </Box>
     </Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+      <Box sx={{ mb: 4 }}>
+        {!isButtonHidden ? (
+          <button className="connect-wallet-button" onClick={() => {
+              if (isConnected) {
+                pay();
+              } else {
+                connectWallet();
+              }
+            }}>
+            <div className="icon"></div>
+            <div className="text">{isConnected ? 'Pay' : 'Connect Wallet'}</div>
+          </button>
+        ) : null}
+        {transactionStatus === 'Sent' && (
+          <Box sx={{ position: 'relative', height: 36 }}>
+            <CircularProgress />
+          </Box>
+        )}
+      </Box>
+      {transactionStatus && (transactionStatus === 'Sent' || transactionStatus === 'Completed') && (
+        <Typography sx={{ mb: 3, fontSize: 18 }} id="transaction-status">
+            Transaction {transactionStatus}
+        </Typography>
+      )}
+  
+      {paymentStatus && (paymentStatus === 'Sent' || paymentStatus === 'Completed' || paymentStatus.startsWith('Error')) && (
+        <Typography sx={{ mb: 3, fontSize: 18, color: paymentStatus.startsWith('Error') ? 'red' : 'inherit' }} id="payment-status">
+          Payment {paymentStatus}
+        </Typography>
+      )}
+    </Box>
+  </Box>
   );
 }
     
