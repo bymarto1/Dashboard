@@ -54,7 +54,7 @@ const registerStaffService = async (requestBody) => {
       1
     );
   
-    return user.id;
+    return user.id , password;
   };
 const loginService = async (requestBody) => {
     const { username, password } = requestBody;

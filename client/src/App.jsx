@@ -14,6 +14,8 @@ import Settings from './pages/Settings';
 import Blur from './pages/Blur';
 import BlurListing from './pages/Blur/BlurListing';
 import Payments from './pages/Payments'; 
+import Team from './pages/Team'; 
+
 export default function App() {
     return ( 
         <AuthProvider>
@@ -51,6 +53,14 @@ export default function App() {
                             }
                         />
                         <Route
+                            path='team'
+                            element={
+                                <RequireAuth roles={[Role.ADMIN, Role.USER]}>
+                                    <Team />
+                                </RequireAuth>
+                            }
+                        />
+                        <Route
                             path='blur'
                             element={
                                 <RequireAuth roles={[Role.ADMIN, Role.USER, Role.STAFF]}>
@@ -67,7 +77,6 @@ export default function App() {
                             }
                         />
   
-
                     </Route>
                     <Route path='/login' element={<LogIn />} />
                     <Route path='*' element={<NotFound />} />
