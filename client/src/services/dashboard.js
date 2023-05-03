@@ -39,6 +39,16 @@ const getDashboardInfo = async(token)=> {
     });
     return data;
 }
+
+const getPaymentInfo = async(token)=> {
+    const { data } = await axios({
+        url: '/payment',
+        method: 'get',
+        baseURL: baseUrl,
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+}
 const payRenewal = async (transactionHash, price,token) => {
     const response = await axios({
         url: '/payment',
@@ -52,6 +62,6 @@ const payRenewal = async (transactionHash, price,token) => {
     });
     return response.status;
 };
-const dashboardService = { updateConfig, getCurrentConfig , getDashboardInfo, payRenewal};
+const dashboardService = { updateConfig, getCurrentConfig , getDashboardInfo, getPaymentInfo ,payRenewal};
 
 export default dashboardService;

@@ -21,8 +21,6 @@ const style = {
 };
 
 export const ConnectAndPay = () => { 
-  const [username, setUsername] = useState('');
-  const [memberSince, setMemberSince] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
@@ -38,12 +36,10 @@ export const ConnectAndPay = () => {
 
   useEffect(() => {
       dashboardService
-          .getDashboardInfo(auth.token)
+          .getPaymentInfo(auth.token)
           .then((info) => {
               if (info ) {
-                  const { username, memberSince, expiryDate } = info;
-                  setUsername(username ? username : '');
-                  setMemberSince(memberSince ? memberSince : '');
+                  const { expiryDate } = info;
                   setExpiryDate(expiryDate ? expiryDate : '');
               }
           });

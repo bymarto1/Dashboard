@@ -29,28 +29,55 @@ const getCurrentConfigService = async (userId) => {
 };
 
 const getDashboardInfoService = async (userId) => {
+  var user = await db.users.findOne({
+    where: { id: userId },
+    include: { model: db.renewals },
+  });
+  var owner = user.username
+  if (!user) {
+    user = await db.staffs.findOne({
+      where: { id: userId },
+      include: { model: db.renewals },
+    });
+    var owner = user.UserId.username
+  }
+  console.log(owner)
+  const taskCount = await db.blurListingTasks.count({
+    where: { user_id: userId },
+  });
+
+  const staffs = await db.staffs.findAll({
+    where: { UserId: userId },
+  });
+
+  const staffUsernames = staffs.map((staff) => staff.username);
+
+  const info = {
+    username: user.username,
+    memberSince: user.createdAt,
+    expiryDate: user.Renewal.expiryDate,
+    blurTaskCount: taskCount,
+    teamCount: staffUsernames.length + 1,
+    staffs: staffUsernames,
+    owner : owner
+  };
+  return info;
+};
+
+  const getPaymentInfoService = async (userId) => {
     var user = await db.users.findOne({
       where: { id: userId },
       include: { model: db.renewals },
     });
-    if (!user){
-         user = await db.staffs.findOne({
-            where: { id: userId },
-            include: { model: db.renewals },
-          });  
-        
-    }
-    const taskCount = await db.blurListingTasks.count({
-      where: { user_id: userId },
-    });
+
     const info = {
-      username: user.username,
       memberSince: user.createdAt,
       expiryDate: user.Renewal.expiryDate,
-      blurTaskCount: taskCount,
     };
     return info;
   };
+  
+  
   const payRenewalService = async (userId, transactionHash, price) => {
     const [renewal, created] = await db.renewals.findOrCreate({
         where: { UserId: userId },
@@ -91,5 +118,6 @@ module.exports = {
     updateConfigService,
     getCurrentConfigService,    
     getDashboardInfoService,
+    getPaymentInfoService,
     payRenewalService,
 };

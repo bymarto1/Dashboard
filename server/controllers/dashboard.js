@@ -4,6 +4,7 @@ const {
     updateConfigService,
     getCurrentConfigService,
     getDashboardInfoService,
+    getPaymentInfoService,
     payRenewalService
 } = require('../services/dashboard');
 const { StatusCodes } = require('http-status-codes');
@@ -41,6 +42,16 @@ const getDashboardInfo = async (req, res, next) => {
     }
 };
 
+const getPaymentInfo = async (req, res, next) => {
+    logger.log('Received getPaymentInfo request', 1);
+    try {
+        const info = await getPaymentInfoService(req.userId);
+        res.status(StatusCodes.OK).json(info);
+    } catch (error) {
+        logger.log(error.message, 0);
+        next(error);
+    }
+};
 const payRenewal = async (req, res, next) => {
     logger.log('Received payRenewal request', 1);
     try {
@@ -56,7 +67,8 @@ const payRenewal = async (req, res, next) => {
 
 module.exports = {
     updateConfig,
-    getCurrentConfig,    
+    getCurrentConfig,  
+    getPaymentInfo,  
     getDashboardInfo,
     payRenewal,
 };

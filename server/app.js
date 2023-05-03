@@ -19,6 +19,8 @@ const listEndpoints = require('express-list-endpoints');
 const authRouter = require('./routes/auth.js');
 const dashboardRouter = require('./routes/dashboard.js');
 const blurRouter = require('./routes/blur');
+const teamRouter = require('./routes/team');
+
 //const adminRouter = require('./routes/admin');
 
 const {
@@ -50,6 +52,8 @@ app.use(xss());
 app.use('/api/auth', authRouter);
 app.use('/api/dashboard', authenticateUser, dashboardRouter);
 app.use('/api/blur', authenticateUser, blurRouter);
+app.use('/api/team', authenticateUser, teamRouter);
+
 //app.use('/api/admin', authenticateAdmin, adminRouter);
 
 app.use(notFoundMiddleware);

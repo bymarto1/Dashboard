@@ -7,6 +7,7 @@ import { useLocation, Link } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import GroupsIcon from '@mui/icons-material/Groups';
 import { Blur } from '../../icons/blur';
 import { Blank } from '../../icons/blank';
 import React from 'react';
@@ -26,6 +27,11 @@ const general = [
         href: '/payment',
         icon: <AccountBalanceWalletIcon />,
         title: 'Payments',
+    },
+    {
+        href: '/team',
+        icon: <GroupsIcon />,
+        title: 'Team',
     },
 ];
 
