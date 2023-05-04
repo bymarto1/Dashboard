@@ -29,7 +29,7 @@ export default function App() {
                         }
                     >
                         <Route
-                            path='/'
+                            path='/' 
                             element={
                                 <RequireAuth roles={[Role.ADMIN, Role.USER, Role.STAFF]}>
                                     <Dashboard />

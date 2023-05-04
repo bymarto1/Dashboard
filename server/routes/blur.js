@@ -6,6 +6,7 @@ const {
     createListingTask,
     getAllListingTasks,
     deleteListingTask,
+    getListingPerformanceTask
 } = require('../controllers/blur');
 
 // controller

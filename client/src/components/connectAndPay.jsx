@@ -31,7 +31,7 @@ export const ConnectAndPay = () => {
   const [paymentStatus, setPaymentStatus] = useState('');
   const [isButtonHidden, setIsButtonHidden] = useState(false);
 
-  var price = '0.05'
+  const price = '0.05'
   const auth = useAuth();
 
   useEffect(() => {

@@ -95,7 +95,6 @@ const getOwnerId = async (id) => {
 
     logger.log('Checking userId', 1);
     var user = await db.users.findOne({ where: { id: id } });
-    console.log(user)
     if (!user) {
         logger.log('Staff detected', 1);
 
