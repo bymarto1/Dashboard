@@ -9,10 +9,15 @@ const {
     getDashboardInfo,
     getPaymentInfo,
     payRenewal,
+    saveMonitoringData,
+    getPerformance,
 
 } = require('../controllers/dashboard');
 
 router.route('/').get(getDashboardInfo);
+
+router.route('/performance').get(getPerformance).post(saveMonitoringData);
+
 
 router.route('/config').get(getCurrentConfig).put(updateConfig);
 

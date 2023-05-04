@@ -14,7 +14,6 @@ const {
 const {getOwnerId} = require('./auth')
 
 const getAllListingTasksService = async (userId) => {
-    console.log(userId)
     
     userId = await getOwnerId(userId)
     const tasks = await db.blurListingTasks.findAll({

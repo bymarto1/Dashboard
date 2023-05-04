@@ -19,6 +19,7 @@ import { useAuth } from '../hooks/useAuth';
 import dashboardService from '../services/dashboard';
 import TeamIcon from '@mui/icons-material/People';
 import CrownIcon from '@mui/icons-material/EmojiEvents';
+import PerformanceChart from '../components/performance-chart';
 
 const Dashboard = () => {
     const [username, setUsername] = useState('');
@@ -84,7 +85,6 @@ const Dashboard = () => {
     </Box>
   </Container>
   <Container maxWidth='lg'>
-                {/* ... Your existing content */}
                 <Box sx={{ mb: 4 }}>
                     <Typography variant='h5'>
                         Team ({teamCount} members):
@@ -110,7 +110,12 @@ const Dashboard = () => {
                         ))}
                     </List>
                 </Box>
-            </Container>
+            </Container> 
+            <div className="App">
+      <header className="App-header">
+        <PerformanceChart />
+      </header>
+    </div> 
 </Box>
       );
     }

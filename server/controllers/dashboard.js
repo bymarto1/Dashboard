@@ -4,8 +4,11 @@ const {
     updateConfigService,
     getCurrentConfigService,
     getDashboardInfoService,
+    getPerformanceService,
     getPaymentInfoService,
-    payRenewalService
+    saveMonitoringDataService,
+    payRenewalService,
+
 } = require('../services/dashboard');
 const { StatusCodes } = require('http-status-codes');
 
@@ -42,6 +45,16 @@ const getDashboardInfo = async (req, res, next) => {
     }
 };
 
+const getPerformance = async (req, res, next) => {
+    logger.log('Received getPerformance request', 1);
+    try {
+        const info = await getPerformanceService(req.userId);
+        res.status(StatusCodes.OK).json(info);
+    } catch (error) {
+        logger.log(error.message, 0);
+        next(error);
+    }
+};
 const getPaymentInfo = async (req, res, next) => {
     logger.log('Received getPaymentInfo request', 1);
     try {
@@ -65,10 +78,27 @@ const payRenewal = async (req, res, next) => {
 };
 
 
+const saveMonitoringData =  async (req, res, next) => {
+    logger.log('Received saveMonitoringData request', 1);
+    try {
+        const { collection, total_requests, successful_requests } = req.body;
+        if (!collection || !total_requests || !successful_requests) {
+            res.status(400).json({ message: 'Bad request: missing required fields.' });
+            return;
+          }
+        const response = await saveMonitoringDataService(collection, total_requests, successful_requests);
+        res.status(StatusCodes.OK).json(response);
+    } catch (error) {
+        logger.log(error.message, 0);
+        next(error);
+    }
+};
 module.exports = {
     updateConfig,
     getCurrentConfig,  
     getPaymentInfo,  
     getDashboardInfo,
+    saveMonitoringData,
+    getPerformance,
     payRenewal,
 };

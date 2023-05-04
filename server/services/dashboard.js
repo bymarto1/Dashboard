@@ -11,7 +11,9 @@ const {
     UnauthenticatedError,
     InternalServerError,
 } = require('../errors');
+const { Sequelize, Op } = require('sequelize');
 
+const {getOwnerId} = require('./auth')
 
 const updateConfigService = async (userId, requestBody) => {
     const { groupName, generalWebhook, generalDelay, groupImage } = requestBody;
@@ -76,7 +78,68 @@ const getDashboardInfoService = async (userId) => {
     };
     return info;
   };
+  const getPerformanceService = async (userId) => {
+    userId = await getOwnerId(userId);
   
+    const user = await db.users.findOne({
+      where: { id: userId },
+      include: [
+        {
+          model: db.blurListingTasks,
+        },
+      ],
+    });
+  
+    const currentTime = new Date();
+    const oneHourAgo = new Date(currentTime.getTime() - 60 * 60 * 1000);
+    const oneDayAgo = new Date(currentTime.getTime() - 24 * 60 * 60 * 1000); 
+  
+    const info = {
+      collections: await Promise.all(
+        user.BlurListings.map(async (collection) => {
+          const histories = await db.collectionsMonitoringHistory.findAll({
+            where: {
+              blurlistings_id: collection.id,
+              timestamp: {
+                [Op.gte]: oneHourAgo,
+                [Op.lt]: oneDayAgo, 
+              },
+            },
+          });
+  
+          return {
+            id: collection.id,
+            collection: collection.collection,
+            performance: histories.map((history) => {
+              return {
+                timestamp: history.timestamp,
+                total_requests: history.total_requests,
+                successful_requests: history.successful_requests,
+              };
+            }),
+          };
+        })
+      ),
+    };
+  
+    return info;
+  };
+  
+  const saveMonitoringDataService = async (collection, total_requests, successful_requests) => {
+    try {
+      const result = await db.collectionsMonitoringHistory.create({
+        id: crypto.randomUUID(),
+        blurlistings_id: collection,
+        timestamp: new Date(),
+        total_requests,
+        successful_requests,
+      });
+  
+      console.log('Monitoring data saved successfully:', result);
+    } catch (error) {
+      console.error('Error saving monitoring data:', error);
+    }
+  };
   
   const payRenewalService = async (userId, transactionHash, price) => {
     const [renewal, created] = await db.renewals.findOrCreate({
@@ -119,5 +182,7 @@ module.exports = {
     getCurrentConfigService,    
     getDashboardInfoService,
     getPaymentInfoService,
+    getPerformanceService,
     payRenewalService,
+    saveMonitoringDataService,
 };

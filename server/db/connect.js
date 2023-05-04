@@ -1,8 +1,8 @@
 require('dotenv').config(); // load the environment variables from the .env file
 
 
+const { Sequelize, Op } = require('sequelize');
 
-const { Sequelize } = require('sequelize');
 const logger = require('../utils/logger');
 const sequelize = new Sequelize({
     dialect: 'postgres',
@@ -29,13 +29,16 @@ db.blurListingTasks = require('./models/BlurListing')(sequelize, Sequelize);
 db.payments = require('./models/Payment')(sequelize, Sequelize);
 db.renewals = require('./models/Renewal')(sequelize, Sequelize);
 db.staffs = require('./models/Staff')(sequelize, Sequelize);
-
+db.collectionsMonitoringHistory = require('./models/CollectionsMonitoringHistory')(sequelize, Sequelize)
 // Relations
 db.users.hasOne(db.configs, { foreignKey: 'user_id' });
 db.configs.belongsTo(db.users, { foreignKey: 'user_id' });
 
 db.users.hasMany(db.blurListingTasks, { foreignKey: 'user_id' });
 db.blurListingTasks.belongsTo(db.users, { foreignKey: 'user_id' });
+
+db.blurListingTasks.hasMany(db.collectionsMonitoringHistory, { foreignKey: 'id' });
+db.collectionsMonitoringHistory.belongsTo(db.blurListingTasks, { foreignKey: 'id' });
 
 db.users.hasMany(db.payments);
 db.payments.belongsTo(db.users);
