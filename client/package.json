@@ -12,8 +12,6 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.25.0",
     "dotenv": "^14.3.2",
-    "eslint-config-react-app": "^7.0.1",
-    "eslint-plugin-import": "^2.27.5",
     "ethers": "^5.7.2",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.1",
@@ -49,5 +47,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  
+  "resolutions": {
+    "eslint": "^7.11.0"
   }
+  
 }
