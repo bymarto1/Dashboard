@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:13000/api/dashboard';
+const baseUrl = 'https://nft-dashboard.onrender.com/api/dashboard';
 
 const updateConfig = async (newConfig, token) => {
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:13000/api/team';
+const baseUrl = 'https://nft-dashboard.onrender.com/api/team';
 
 const getAllStaffTask = async (token) => {
     const { data } = await axios({

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:13000/api/auth/login';
+const baseUrl = 'https://nft-dashboard.onrender.com/api/auth/login';
 
 const login = async (credentials) => {
     const { data } = await axios.post(baseUrl, credentials);
