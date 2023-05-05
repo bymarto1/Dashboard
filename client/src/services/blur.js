@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:13000/api/blur';
+const baseUrl = 'https://nft-dashboard.onrender.com/api/blur';
 
 const getAllListingTasks = async (token) => {
     const { data } = await axios({
