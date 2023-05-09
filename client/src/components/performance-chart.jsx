@@ -13,6 +13,10 @@ const PerformanceChart = () => {
       setRawData(data);
     };
     fetchData();
+
+    const intervalId = setInterval(fetchData, 10000); // Fetch data every minute
+
+    return () => clearInterval(intervalId); // Cleanup function to clear the interval
   }, []);
 
   const data = rawData.collections.map((dataset) => {
