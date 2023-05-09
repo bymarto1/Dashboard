@@ -38,21 +38,25 @@ const getAllListingTasksService = async (userId) => {
 };
 
 const createListingTaskService = async (userId, requestBody) => {
-    userId = await getOwnerId(userId)
-
-    const { collection,rarity , webhook, pricelimit , raritylimit } = requestBody;
-    console.log(raritylimit)
+    userId = await getOwnerId(userId);
+  
+    const { collection, rarity, webhook, pricelimit, raritylimit } = requestBody;
+  
+    const webhookValue = webhook === '' ? null : webhook;
+    const pricelimitValue = pricelimit === '' ? null : pricelimit;
+  
     const task = await db.blurListingTasks.create({
-        collection,
-        webhook,
-        rarity, 
-        pricelimit,
-        raritylimit,
-        user_id: userId,
+      collection,
+      webhook: webhookValue,
+      rarity,
+      pricelimit: pricelimitValue,
+      raritylimit,
+      user_id: userId,
     });
+  
     logger.log('Successfully created BlurListings task', 1);
     return task.id;
-};
+  };
 
 const deleteListingTaskService = async (listingId) => {
     await db.blurListingTasks.destroy({

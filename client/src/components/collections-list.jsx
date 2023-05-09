@@ -30,8 +30,10 @@ const CollectionsList = ({ collections, headFields, handleRemoveCollection }) =>
                 {collection.collection && (
                   <TableCell>{collection.collection}</TableCell>
                 )}
-                {collection.pricelimit && (
+                {collection.pricelimit ? (
                   <TableCell>{collection.pricelimit}</TableCell>
+                ) : (
+                  <TableCell></TableCell>
                 )}
                 <TableCell
                   style={{
