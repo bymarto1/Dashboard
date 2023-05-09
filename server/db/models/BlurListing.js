@@ -10,15 +10,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     webhook: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     pricelimit: {
       type: DataTypes.FLOAT,
       allowNull: true,
     },
     user_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       references: {
         model: 'Users',

@@ -16,15 +16,26 @@ const { Sequelize, Op } = require('sequelize');
 const {getOwnerId} = require('./auth')
 
 const updateConfigService = async (userId, requestBody) => {
-    const { groupName, generalWebhook, generalDelay, groupImage } = requestBody;
-    const config = await db.configs.findOne({ where: { user_id: userId } });
-    klk = await config.update({ groupName, generalWebhook, generalDelay , groupImage });
-    logger.log('Successfully updated general config', 1);
-    return;
-};
+  const { groupName, generalWebhook, generalDelay, groupImage } = requestBody;
+  const [config, created] = await db.configs.findOrCreate({
+    where: { user_id: userId },
+    defaults: {
+      groupName,
+      generalWebhook,
+      generalDelay,
+      groupImage,
+      id: crypto.randomUUID(),
+    },
+  });
 
+  if (!created) {
+    await config.update({ groupName, generalWebhook, generalDelay, groupImage });
+    logger.log('Successfully updated general config', 1);
+  } else {
+    logger.log('Successfully created general config', 1);
+  }
+};
 const getCurrentConfigService = async (userId) => {
-    console.log('klk')
     const config = await db.configs.findOne({ where: { user_id: userId } });
     logger.log('Got current general config, returning it...', 1);
     return config;
@@ -43,7 +54,6 @@ const getDashboardInfoService = async (userId) => {
     });
     var owner = user.UserId.username
   }
-  console.log(owner)
   const taskCount = await db.blurListingTasks.count({
     where: { user_id: userId },
   });
@@ -92,7 +102,7 @@ const getDashboardInfoService = async (userId) => {
   
     const currentTime = new Date();
     const oneHourAgo = new Date(currentTime.getTime() - 60 * 60 * 1000);
-    const oneDayAgo = new Date(currentTime.getTime() - 24 * 60 * 60 * 1000); 
+    const oneDayAgo = new Date(currentTime.getTime() - 24 * 60 * 60 * 1000);
   
     const info = {
       collections: await Promise.all(
@@ -101,12 +111,11 @@ const getDashboardInfoService = async (userId) => {
             where: {
               blurlistings_id: collection.id,
               timestamp: {
-                [Op.gte]: oneHourAgo,
-                [Op.lt]: oneDayAgo, 
-              },
+                [Op.gt]: oneHourAgo
+              }
             },
           });
-  
+
           return {
             id: collection.id,
             collection: collection.collection,
@@ -124,7 +133,6 @@ const getDashboardInfoService = async (userId) => {
   
     return info;
   };
-  
   const saveMonitoringDataService = async (collection, total_requests, successful_requests) => {
     try {
       const result = await db.collectionsMonitoringHistory.create({
@@ -151,7 +159,6 @@ const getDashboardInfoService = async (userId) => {
         UserId: userId
     });
 
-    console.log(renewal, created)
 
     if (!created) {
         const now = new Date();

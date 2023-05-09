@@ -56,14 +56,7 @@ const Dashboard = () => {
     }, [auth.token]);
 
     return (
-<Box
-  component='main'
-  sx={{
-    flexGrow: 1,
-    py: 8,
-    position: 'relative',
-  }}
->
+<Box component='main' sx={{ flexGrow: 1, py: 8, position: 'relative' }}>
   <Container maxWidth='lg'>
     <Typography sx={{ mb: 3 }} variant='h4'>
       Dashboard
@@ -84,39 +77,44 @@ const Dashboard = () => {
       <Typography variant='h6'>{memberSince}</Typography>
     </Box>
   </Container>
+
   <Container maxWidth='lg'>
-                <Box sx={{ mb: 4 }}>
-                    <Typography variant='h5'>
-                        Team ({teamCount} members):
-                    </Typography>
-                    <List>
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <CrownIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={owner} />
-                        </ListItem>
-                        {staffs.map((staff, index) => (
-                            <ListItem key={index}>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <TeamIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary={staff} />
-                            </ListItem>
-                        ))}
-                    </List>
-                </Box>
-            </Container> 
-            <div className="App">
-      <header className="App-header">
+    <Box sx={{ mb: 4 }}>
+      <Typography variant='h5'>
+        Team ({teamCount} members):
+      </Typography>
+      <List>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar>
+              <CrownIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={owner} />
+        </ListItem>
+        {staffs.map((staff, index) => (
+          <ListItem key={index}>
+            <ListItemAvatar>
+              <Avatar>
+                <TeamIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={staff} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  </Container>
+
+  <Container maxWidth='lg' sx={{ width: '80%' }}>
+    <div className='App'>
+      <header className='App-header'>
         <PerformanceChart />
       </header>
-    </div> 
+    </div>
+  </Container>
 </Box>
+
       );
     }
     
