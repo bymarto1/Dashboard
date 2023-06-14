@@ -36,6 +36,14 @@ require('./db/connect');
 require('dotenv').config();
 
 // Middlewares
+
+app.use(
+    rateLimiter({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100, // limit each IP to 100 requests per windowMs
+      skip: (req) => req.path === '/api/endpoint-to-exclude', // Exclude a specific endpoint
+    })
+  );
 app.use(express.json({ limit: '200MB' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(
