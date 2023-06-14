@@ -5,7 +5,6 @@ import { DashboardLayout } from './components/layout/dashboard-layout';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider, RequireAuth } from './hooks/useAuth';
 import { Role } from './roles';
-import { Helmet } from 'react-helmet';
 
 import LogIn from './pages/LogIn';
 import Dashboard from './pages/Dashboard';
