@@ -5,7 +5,6 @@ const app = express();
 const helmet = require('helmet');
 const cors = require('cors');
 const xss = require('xss-clean');
-const rateLimiter = require('express-rate-limit');
 
 // Utils
 const logger = require('./utils/logger');
@@ -36,22 +35,8 @@ require('./db/connect');
 require('dotenv').config();
 
 // Middlewares
-
-app.use(
-    rateLimiter({
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100, // limit each IP to 100 requests per windowMs
-      skip: (req) => req.path === '/api/endpoint-to-exclude', // Exclude a specific endpoint
-    })
-  );
 app.use(express.json({ limit: '200MB' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(
-    rateLimiter({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 100, // limit each IP to 100 requests per windowMs
-    })
-);
 app.use(helmet());
 app.use(cors());
 app.use(xss());
@@ -73,7 +58,6 @@ const host = '0.0.0.0';
  
 const start = async () => {
     try {
-
         http.createServer(app).listen(httpPort, host, async () => {
             const hash = bcrypt.hashSync(process.env.ADMIN_PW, 10);
             const [admin, created] = await db.users.findOrCreate({
@@ -87,6 +71,7 @@ const start = async () => {
             });
             logger.log(`HTTP server is listening on port ${httpPort}...`, 1);
         });
+
         // https
         //     .createServer(
         //         {
@@ -102,11 +87,7 @@ const start = async () => {
         logger.log(error.message, 0);
     }
 };
+
 console.log(listEndpoints(app));
 
 start();
-
-
-
-
-  

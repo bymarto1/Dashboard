@@ -14,7 +14,7 @@ const PerformanceChart = () => {
     };
     fetchData();
 
-    const intervalId = setInterval(fetchData, 5000); // Fetch data every minute
+    const intervalId = setInterval(fetchData, 10000); // Fetch data every minute
 
     return () => clearInterval(intervalId); // Cleanup function to clear the interval
   }, []);

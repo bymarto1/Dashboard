@@ -1,23 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const rateLimiter = require('express-rate-limit');
-
-const limiterOptions = {
-  windowMs: 15 * 60 * 1000, 
-  max: 100, 
-};
-
-const rateLimiterMiddleware = rateLimiter(limiterOptions);
-
-const nonRateLimitedEndpoints = ['/performance', '/performance/save'];
-
-router.use((req, res, next) => {
-  if (nonRateLimitedEndpoints.includes(req.path)) {
-    next();
-  } else {
-    rateLimiterMiddleware(req, res, next);
-  }
-});
 
 // controller
 const {
